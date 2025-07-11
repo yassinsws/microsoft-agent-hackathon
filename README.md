@@ -1,35 +1,36 @@
-# Microsoft Agent Hackathon for Students
+# 🤖 Microsoft Agent Hackathon for Students
 
-This repository contains all materials necessary for the Microsoft Student Hackathon taking place at the Munich Headquarter on July 15th 2025. 
-
-
-## Agenda
-
-|                                                                                                                      | **Material / Slides**                           |
-|:----------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------|
-| **Einführung in AI-Agenten:**<br>Überblick über Microsofts Lösung mit AI Foundry und dem Foundry SDK                              | [Open Slides]()                            |
-| **Hands-on Hack in Breakout Rooms:**<br>Entwicklung eigener Agenten mit AI Foundry und Azure AI Agents SDK                        | [Hack Session 1]() |
-| <span style="font-weight:bold; color:#555;">Pause</span>                                                                         |                                                 |
-| **Semantic Kernel:**<br>Multi-Agenten-Orchestrierung und offene Standards (MCP & A2A) im Überblick                                | [Open Slides]()                             |
-| **Hands-on Hack in Breakout Rooms:**<br>Orchestrierung mehrerer Agenten mit Semantic Kernel SDK inkl. Anbindung an MCP & A2A      | [Hack Session 2]() |
-| <span style="font-weight:bold; color:#555;">Pause</span>                                                                         |                                                 |
-| **Abschluss:**<br>Zusammenfassung der wichtigsten Erkenntnisse und Ausblick inklusive Blueprints für Enterprise Ready Agent Solutions | [Open Slides]()                            |
+This repository contains all materials necessary for the Microsoft Student Hackathon taking place at the Munich Headquarter on July 15th 2025. 🚀
 
 
+## 📅 Agenda
 
-## Evaluation Criteria
+| **Time** | **Session** | **Material / Slides** |
+|:---------|:-----------|:---------------------|
+| 09:00 - 09:10 | **Welcome**| [Open Slides]() |
+| 09:10 - 09:30 | **Introduction to Agentic Systems**<br>Concept of single and multi Agent Systems including Business Use Cases | [Open Slides]() |
+| 09:30 - 09:50 | **How to build Agentic Systems**<br>Guide on how to develope Agentic Systems with the Microsoft Stack | [Hack Session 1]() |
+| 09:50 - 10:00 | **Hackathon Challange and Guidelines**<br> Presenation of Hackathon Challang and Evaluation Criteria | [Hack Session 1]() |
+| 10:00 - 13:00 | **Hacking Session 1** | [Open Slides]() |
+| 10:00 - 13:00 | <span style="font-weight:bold; color:#555;">Lunch Break</span> |  |
+| 14:00 - 16:00 | **Hacking Session 2** | [Open Slides]() |
+| 16:00 - 17:15 | **Team Pitch and Winner Announcements** | [Open Slides]() |
+| 17:15 - 17:45 | **Careers at Microsoft** | [Open Slides]() |
+| 17:45 - 18:00 | **Closing remarks & Netowrking** | [Open Slides]() |
 
-###
 
+## 🏆 Evaluation Criteria
 
-
-## Getting Started
-
-
- Setting up your Subscription and Azure AI Foundry 
+### Coming Soon! 📋
 
 
 
- Continue with the starter Code for Azure AI Foundry SDK
+## 🚀 Getting Started
 
- Continue with the starter Code for the Semantic Kernel SDK
+1. 📖 Revise the Hackathon Goals and Guidelines here [Open Slides]()
+
+1. ☁️ Setting up your Subscription and Azure AI Foundry (we will go to each team and help with the setup) 
+
+1. 🤖 Continue with the starter Code for Azure AI Foundry SDK [AI Foundry SDK](./AI-Foundry-SDK/) 
+
+1. (Optional) Continue with the starter Code for the Semantic Kernel SDK [Semantic Kernel](./Semantic-Kernel-SDK/)
