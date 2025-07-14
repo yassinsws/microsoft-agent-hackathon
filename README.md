@@ -21,16 +21,28 @@ This repository contains all materials necessary for the Microsoft Student Hacka
 
 ## 🏆 Evaluation Criteria
 
-### Coming Soon! 📋
-
-
+![alt text](Media/hackathon_guidelines.png)
 
 ## 🚀 Getting Started
 
-1. 📖 Revise the Hackathon Goals and Guidelines here [Open Slides]()
+### 1.  Setting up your Subscription and Azure AI Foundry ☁️
 
-1. ☁️ Setting up your Subscription and Azure AI Foundry (we will go to each team and help with the setup) 
+We provide every team with 50 $ in Azure Credits to setup an AI Foundry Instance. We will come to every team individualy to set this up. For further credits you can leverage also the free credits given to students. [Request free student azure credits here](https://azure.microsoft.com/en-us/free/students#:~:text=Start%20free%20with%20%24100%20credit%20to%20use%20in,get%20%24100%20credit%20and%20free%20services%E2%80%94just%20like%20before.?msockid=1dbbfc39330560290369e9af326e61ff)
 
-1. 🤖 Continue with the starter Code for Azure AI Foundry SDK [AI Foundry SDK](./AI-Foundry-SDK/) 
+### 2. Continue with the starter Code for Azure AI Foundry SDK [AI Foundry SDK](./AI-Foundry-SDK/) 
 
-1. (Optional) Continue with the starter Code for the Semantic Kernel SDK [Semantic Kernel](./Semantic-Kernel-SDK/)
+This is a short guide to explain how Agents are created in Azure AI Foundry. It contains an exercise you can follow to have a working local setup of the Azure AI Agents SDK
+
+### 3. (Optional) ontinue with the starter Code for the Semantic Kernel SDK [Semantic Kernel](./Semantic-Kernel-SDK/)
+
+Only necessary if you decide to use Semantic Kernel as an orchestration Framework
+
+### 4. Checkout the official Microsoft documentation and additional resources 📚
+
+- **Azure AI Foundry Agent Service** - [Microsoft Documentation](https://learn.microsoft.com/en-us/azure/ai-foundry/agents/overview)
+
+- **Semantic Kernel Agent Framework** - [Microsoft Documentation](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/?pivots=programming-language-python)
+
+- **Azure AI Templates** - [Browse Templates](https://azure.github.io/ai-app-templates/)
+
+- **LangGraph** - [Official Documentation](https://www.langchain.com/langgraph)
