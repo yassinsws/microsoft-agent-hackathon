@@ -238,3 +238,8 @@ Checkout out all available Orchestration Patterns and choose the one most suitab
 | [Group Chat](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-orchestration/group-chat) | All agents participate in a group conversation, coordinated by a group manager. | Brainstorming, collaborative problem solving, consensus building. |
 | [Magentic](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/agent-orchestration/magentic)   | Group chat-like orchestration inspired by [MagenticOne](https://magenticone.com/). | Complex, generalist multi-agent collaboration.                 |
 
+## Other Resources
+
+- [Azure-Samples/semantic-kernel-workshop](https://github.com/Azure-Samples/semantic-kernel-workshop)
+- [Microsoft/Multi-Agent-Custom-Automation-Engine-Solution-Accelerator](https://github.com/microsoft/Multi-Agent-Custom-Automation-Engine-Solution-Accelerator)
+- [dminkovski/agent-openai-banking-assistant-csharp/](https://azure.github.io/ai-app-templates/repo/dminkovski/agent-openai-banking-assistant-csharp/)
