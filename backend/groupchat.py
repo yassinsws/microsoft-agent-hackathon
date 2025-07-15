@@ -34,100 +34,17 @@ def get_agents() -> list[Agent]:
 
     Feel free to add or remove agents.
     """
-    farmer = ChatCompletionAgent(
-        name="Farmer",
-        description="A rural farmer from Southeast Asia.",
+    web_search_agent = ChatCompletionAgent(
+        name="WebSearch",
+        description="Search the web using Bing Search for possible customers.",
         instructions=(
-            "You're a farmer from Southeast Asia. "
-            "Your life is deeply connected to land and family. "
-            "You value tradition and sustainability. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    developer = ChatCompletionAgent(
-        name="Developer",
-        description="An urban software developer from the United States.",
-        instructions=(
-            "You're a software developer from the United States. "
-            "Your life is fast-paced and technology-driven. "
-            "You value innovation, freedom, and work-life balance. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    teacher = ChatCompletionAgent(
-        name="Teacher",
-        description="A retired history teacher from Eastern Europe",
-        instructions=(
-            "You're a retired history teacher from Eastern Europe. "
-            "You bring historical and philosophical perspectives to discussions. "
-            "You value legacy, learning, and cultural continuity. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    activist = ChatCompletionAgent(
-        name="Activist",
-        description="A young activist from South America.",
-        instructions=(
-            "You're a young activist from South America. "
-            "You focus on social justice, environmental rights, and generational change. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    spiritual_leader = ChatCompletionAgent(
-        name="SpiritualLeader",
-        description="A spiritual leader from the Middle East.",
-        instructions=(
-            "You're a spiritual leader from the Middle East. "
-            "You provide insights grounded in religion, morality, and community service. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    artist = ChatCompletionAgent(
-        name="Artist",
-        description="An artist from Africa.",
-        instructions=(
-            "You're an artist from Africa. "
-            "You view life through creative expression, storytelling, and collective memory. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    immigrant = ChatCompletionAgent(
-        name="Immigrant",
-        description="An immigrant entrepreneur from Asia living in Canada.",
-        instructions=(
-            "You're an immigrant entrepreneur from Asia living in Canada. "
-            "You balance trandition with adaption. "
-            "You focus on family success, risk, and opportunity. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    doctor = ChatCompletionAgent(
-        name="Doctor",
-        description="A doctor from Scandinavia.",
-        instructions=(
-            "You're a doctor from Scandinavia. "
-            "Your perspective is shaped by public health, equity, and structured societal support. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
+            "Search the internet for similar customers."
         ),
         service=AzureChatCompletion(),
     )
 
     return [
-        farmer,
-        developer,
-        teacher,
-        activist,
-        spiritual_leader,
-        artist,
-        immigrant,
-        doctor,
+        web_search_agent
     ]
 
 

@@ -3,9 +3,32 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 import asyncio
+import json
 
 from semantic_kernel.agents import ChatCompletionAgent
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+
+from azure.identity.aio import DefaultAzureCredential
+from semantic_kernel.agents import AzureAIAgent, AzureAIAgentSettings
+
+async def bing_search_agent():
+    with open("agent_config.json", "r") as file:
+        json_object = json.load(file)
+    
+    for obj in json_object:
+        if obj["name"] == "bingAgent":
+            bing_search_agent_id = obj["id"]
+
+    print(bing_search_agent_id)
+    async with (
+        DefaultAzureCredential() as creds,
+        AzureAIAgent.create_client(credential=creds) as client,
+    ):
+        agent_definition = await client.agents.get_agent(assistant_id=bing_search_agent_id)
+        bing_agent = AzureAIAgent(client=client, definition=agent_definition)
+    return bing_agent
+
+bing_search_agent = asyncio.run(bing_search_agent())
 
 agentLocal = ChatCompletionAgent(
     service=AzureChatCompletion(),
