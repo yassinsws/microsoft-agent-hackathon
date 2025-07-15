@@ -39,3 +39,4 @@ backend/.env
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+microsoftagents_env

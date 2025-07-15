@@ -3,6 +3,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 import asyncio
+import json
 
 from dotenv import load_dotenv
 from semantic_kernel.agents import ChatCompletionAgent
