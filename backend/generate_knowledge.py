@@ -4,18 +4,18 @@
 
 import asyncio
 
+from dotenv import load_dotenv
 from semantic_kernel.agents import ChatCompletionAgent
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 
 agentLocal = ChatCompletionAgent(
-    service=AzureChatCompletion(),
     name="Assistant",
     instructions="You are a location assessment specialist. Generate some knowledge.",
 )
 
 
 agentCustomer = ChatCompletionAgent(
-    service=AzureChatCompletion(),
+    service=AzureChatCompletion(deployment_name="gpt-4o"),
     name="Assistant",
     instructions="You are a customer assessment specialist. Generate some knowledge.",
 )
@@ -38,10 +38,17 @@ async def generate_knowledge():
         location_task, customer_task
     )
 
-    # Print responses
-    print(f"# {location_response.name}: {location_response}")
-    print(f"# {customer_response.name}: {customer_response}")
+    with open("generated_knowledge_location.txt", "w", encoding="utf-8") as file:
+        file.write(f"Location Assessment:\n{location_response}\n\n")
+
+    with open("generated_knowledge_customer.txt", "w", encoding="utf-8") as file:
+        file.write(f"Customer Assessment:\n{customer_response}\n")
+
+    # # Print responses
+    # print(f"# {location_response.name}: {location_response}")
+    # print(f"# {customer_response.name}: {customer_response}")
 
 
 if __name__ == "__main__":
+    load_dotenv()
     asyncio.run(generate_knowledge())
