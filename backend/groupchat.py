@@ -32,26 +32,103 @@ else:
 def get_agents() -> list[Agent]:
     """Return a list of agents that will participate in the group style discussion.
 
-    Feel free to add or remove agents.
+    Loads pre-generated knowledge from text files and incorporates it into agent instructions.
     """
-    web_search_agent = ChatCompletionAgent(
-        name="WebSearch",
-        description="Search the web using Bing Search for possible customers.",
+
+    # Laden der vorgenerierten Wissensdateien
+    try:
+        with open(
+            "backend/generated_knowledge_customer.txt", "r", encoding="utf-8"
+        ) as file:
+            customer_knowledge = file.read()
+    except FileNotFoundError:
+        try:
+            with open(
+                "generated_knowledge_customer.txt", "r", encoding="utf-8"
+            ) as file:
+                customer_knowledge = file.read()
+        except FileNotFoundError:
+            customer_knowledge = "Keine Kundeninformationen verfügbar."
+
+    try:
+        with open(
+            "backend/generated_knowledge_location.txt", "r", encoding="utf-8"
+        ) as file:
+            location_knowledge = file.read()
+    except FileNotFoundError:
+        try:
+            with open(
+                "generated_knowledge_location.txt", "r", encoding="utf-8"
+            ) as file:
+                location_knowledge = file.read()
+        except FileNotFoundError:
+            location_knowledge = "Keine Standortinformationen verfügbar."
+
+    try:
+        with open(
+            "backend/generated_knowledge_images.txt", "r", encoding="utf-8"
+        ) as file:
+            images_knowledge = file.read()
+    except FileNotFoundError:
+        try:
+            with open("generated_knowledge_images.txt", "r", encoding="utf-8") as file:
+                images_knowledge = file.read()
+        except FileNotFoundError:
+            images_knowledge = "Keine Bildinformationen verfügbar."
+
+    # Erstellung der Agenten mit dem geladenen Wissen
+    customer_agent = ChatCompletionAgent(
+        name="CustomerExpert",
+        description="Expert for potential buyers of the property.",
         instructions=(
-            "Search the internet for similar customers."
+            "You are an expert on real estate customer needs and preferences. "
+            "You understand what buyers are looking for in properties and can highlight "
+            "features that would appeal to different customer demographics. "
+            "You have deep knowledge about customer behavior in real estate markets. "
+            "Use this expertise to provide insights during discussions about properties.\n\n"
+            f"Additional context about the property's customer assessment:\n{customer_knowledge}"
+        ),
+        service=AzureChatCompletion(),
+    )
+    location_agent = ChatCompletionAgent(
+        name="LocationExpert",
+        description="Expert for location of property.",
+        instructions=(
+            "You are an expert on property locations and neighborhoods. "
+            "You have deep knowledge about different areas, including information on "
+            "school districts, transportation access, local amenities, safety records, "
+            "and future development plans that might affect property values. "
+            "Use this knowledge to provide context about property locations during discussions.\n\n"
+            f"Additional context about the property's location:\n{location_knowledge}"
+        ),
+        service=AzureChatCompletion(),
+    )
+    image_agent = ChatCompletionAgent(
+        name="ImageExpert",
+        description="Expert for images of the property.",
+        instructions=(
+            "You are an expert in visual property assessment and real estate photography. "
+            "You can analyze property images to identify key features, architectural elements, "
+            "potential issues, staging effectiveness, and overall property presentation. "
+            "You understand how visual impressions impact buyer decisions and can provide "
+            "insights about property images during discussions.\n\n"
+            f"Additional context about the property's images:\n{images_knowledge}"
         ),
         service=AzureChatCompletion(),
     )
 
     return [
-        web_search_agent
+        customer_agent,
+        location_agent,
+        image_agent,
     ]
 
 
 class ChatCompletionGroupChatManager(GroupChatManager):
-    """A simple chat completion base group chat manager.
+    """A chat completion based group chat manager for property assessment.
 
-    This chat completion service requires a model that supports structured output.
+    This group chat manager coordinates experts to generate a comprehensive property assessment
+    including property description and price estimation.
     """
 
     service: ChatCompletionClientBase
@@ -59,23 +136,78 @@ class ChatCompletionGroupChatManager(GroupChatManager):
     topic: str
 
     termination_prompt: str = (
-        "You are mediator that guides a discussion on the topic of '{{$topic}}'. "
-        "You need to determine if the discussion has reached a conclusion. "
-        "If you would like to end the discussion, please respond with True. Otherwise, respond with False."
+        "Du bist ein Moderator, der eine Fachdiskussion zum Thema '{{$topic}}' leitet. "
+        "Die Experten diskutieren eine Immobilie und tauschen ihre fachlichen Einschätzungen aus. "
+        "Bestimme, ob die Diskussion ausreichend Informationen für eine fundierte Immobilienbewertung "
+        "mit Beschreibung und Preisschätzung gesammelt hat. "
+        "Wenn genügend Informationen zu Lage, Kundenpräferenzen und visuellen Aspekten der Immobilie "
+        "diskutiert wurden, antworte mit True. Andernfalls mit False."
     )
 
     selection_prompt: str = (
-        "You are mediator that guides a discussion on the topic of '{{$topic}}'. "
-        "You need to select the next participant to speak. "
-        "Here are the names and descriptions of the participants: "
+        "Du bist ein Moderator, der eine Fachdiskussion zum Thema '{{$topic}}' leitet. "
+        "Die Experten analysieren eine Immobilie aus ihren jeweiligen Fachperspektiven. "
+        "Wähle den nächsten Teilnehmer aus, der sprechen soll, um die Bewertung zu vervollständigen. "
+        "Berücksichtige dabei, welche Informationen für eine fundierte Immobilienbewertung noch fehlen. "
+        "Hier sind die Namen und Beschreibungen der Teilnehmer: "
         "{{$participants}}\n"
-        "Please respond with only the name of the participant you would like to select."
+        "Antworte nur mit dem Namen des Teilnehmers, den du auswählen möchtest."
     )
 
     result_filter_prompt: str = (
-        "You are mediator that guides a discussion on the topic of '{{$topic}}'. "
-        "You have just concluded the discussion. "
-        "Please summarize the discussion and provide a closing statement."
+        "Du bist ein professioneller Immobilienbewerter, der eine ausführliche Immobilienbewertung "
+        "basierend auf der vorangegangenen Expertendiskussion zum Thema '{{$topic}}' erstellt. "
+        "Erstelle ein detailliertes JSON-Objekt mit folgender Struktur für die bewertete Immobilie:\n\n"
+        "{\n"
+        '  "property": {\n'
+        '    "id": "[generiere eine eindeutige ID]",\n'
+        '    "title": "[passender Titel für die Immobilie]",\n'
+        '    "price": [Preisschätzung als Zahl ohne Trennzeichen],\n'
+        '    "pricePerSqft": [Preis pro Quadratmeter als Zahl],\n'
+        '    "location": {\n'
+        '      "address": "[vollständige Adresse]",\n'
+        '      "city": "[Stadt]",\n'
+        '      "state": "[Bundesland]",\n'
+        '      "zipCode": "[PLZ]",\n'
+        '      "neighborhood": "[Stadtteil]",\n'
+        '      "coordinates": {\n'
+        '        "lat": [Breitengrad],\n'
+        '        "lng": [Längengrad]\n'
+        "      }\n"
+        "    },\n"
+        '    "details": {\n'
+        '      "bedrooms": [Anzahl],\n'
+        '      "bathrooms": [Anzahl],\n'
+        '      "sqft": [Quadratmeter als Zahl],\n'
+        '      "type": "[Immobilientyp]",\n'
+        '      "yearBuilt": [Baujahr als Zahl],\n'
+        '      "parking": [Anzahl Parkplätze],\n'
+        '      "lotSize": [Grundstücksgröße]\n'
+        "    },\n"
+        '    "images": ["Platzhalter f��r Bilder"],\n'
+        '    "features": ["Feature1", "Feature2", ...],\n'
+        '    "description": "[ausführliche Beschreibung der Immobilie]",\n'
+        '    "confidence_score": [Zahl zwischen 0 und 1],\n'
+        '    "ai_suggestions": ["Vorschlag1", "Vorschlag2", ...],\n'
+        '    "pricing_analysis": {\n'
+        '      "market_position": "[Position im Markt]",\n'
+        '      "confidence": [Zahl zwischen 0 und 1],\n'
+        '      "price_difference_percentage": [Prozentsatz],\n'
+        '      "comparable_properties": {\n'
+        '        "avg_price": [Durchschnittspreis],\n'
+        '        "min_price": [Mindestpreis],\n'
+        '        "max_price": [Höchstpreis],\n'
+        '        "sample_size": [Anzahl]\n'
+        "      },\n"
+        '      "market_insights": ["Insight1", "Insight2", ...]\n'
+        "    }\n"
+        "  },\n"
+        '  "processing_time": [Zeit in Sekunden],\n'
+        '  "recommendations": ["Empfehlung1", "Empfehlung2", ...]\n'
+        "}\n\n"
+        "Fülle alle Werte basierend auf der Expertendiskussion sinnvoll aus. Das JSON muss "
+        "syntaktisch korrekt und maschinenlesbar sein. Achte besonders auf die korrekte "
+        "Formatierung von Zahlen (ohne Anführungszeichen) und Zeichenketten (mit Anführungszeichen)."
     )
 
     def __init__(self, topic: str, service: ChatCompletionClientBase, **kwargs) -> None:
@@ -222,7 +354,11 @@ class ChatCompletionGroupChatManager(GroupChatManager):
         )
         chat_history.add_message(
             ChatMessageContent(
-                role=AuthorRole.USER, content="Please summarize the discussion."
+                role=AuthorRole.SYSTEM,
+                content=await self._render_prompt(
+                    self.result_filter_prompt,
+                    KernelArguments(topic=self.topic),
+                ),
             ),
         )
 
@@ -252,9 +388,9 @@ async def main():
     group_chat_orchestration = GroupChatOrchestration(
         members=agents,
         manager=ChatCompletionGroupChatManager(
-            topic="What does a good life mean to you personally?",
+            topic="Welche Eigenschaften machen eine Immobilie besonders wertvoll?",
             service=AzureChatCompletion(),
-            max_rounds=10,
+            max_rounds=1,
         ),
         agent_response_callback=agent_response_callback,
     )
@@ -270,8 +406,12 @@ async def main():
     )
 
     # 4. Wait for the results
-    value = await orchestration_result.get()
-    print(value)
+    value: ChatMessageContent = await orchestration_result.get()
+
+    # Datei nur mit dem eigentlichen JSON-Inhalt speichern (ohne MessageResult-Wrapper)
+    json_content = value.content
+    with open("group_chat_result.txt", "w", encoding="utf-8") as file:
+        file.write(json_content)
 
     # 5. Stop the runtime after the invocation is complete
     await runtime.stop_when_idle()
