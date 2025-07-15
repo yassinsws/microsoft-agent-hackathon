@@ -1,3 +1,4 @@
+import json
 import random
 import uuid
 from datetime import datetime
@@ -439,7 +440,7 @@ async def create_item_legacy(input: Input):
     with open("group_chat_result.txt", "r", encoding="utf-8") as f:
         content = f.read()
 
-    return content
+    return json.loads(content)
 
 
 if __name__ == "__main__":
