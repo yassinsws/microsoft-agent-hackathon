@@ -208,6 +208,7 @@ class ChatCompletionGroupChatManager(GroupChatManager):
         "Fülle alle Werte basierend auf der Expertendiskussion sinnvoll aus. Das JSON muss "
         "syntaktisch korrekt und maschinenlesbar sein. Achte besonders auf die korrekte "
         "Formatierung von Zahlen (ohne Anführungszeichen) und Zeichenketten (mit Anführungszeichen)."
+        "Gib direkt die json aus nichts anderes, keine Erklärungen oder Kommentare. Das ist sehr wichtig"
     )
 
     def __init__(self, topic: str, service: ChatCompletionClientBase, **kwargs) -> None:
@@ -390,7 +391,7 @@ async def do_groupchat():
         manager=ChatCompletionGroupChatManager(
             topic="Welche Eigenschaften machen eine Immobilie besonders wertvoll?",
             service=AzureChatCompletion(),
-            max_rounds=5,
+            max_rounds=2,
         ),
         agent_response_callback=agent_response_callback,
     )
