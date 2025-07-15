@@ -390,7 +390,7 @@ async def do_groupchat():
         manager=ChatCompletionGroupChatManager(
             topic="Welche Eigenschaften machen eine Immobilie besonders wertvoll?",
             service=AzureChatCompletion(),
-            max_rounds=1,
+            max_rounds=5,
         ),
         agent_response_callback=agent_response_callback,
     )
