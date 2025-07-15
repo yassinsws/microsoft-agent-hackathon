@@ -32,109 +32,103 @@ else:
 def get_agents() -> list[Agent]:
     """Return a list of agents that will participate in the group style discussion.
 
-    Feel free to add or remove agents.
+    Loads pre-generated knowledge from text files and incorporates it into agent instructions.
     """
-    farmer = ChatCompletionAgent(
-        name="Farmer",
-        description="A rural farmer from Southeast Asia.",
+
+    # Laden der vorgenerierten Wissensdateien
+    try:
+        with open(
+            "backend/generated_knowledge_customer.txt", "r", encoding="utf-8"
+        ) as file:
+            customer_knowledge = file.read()
+    except FileNotFoundError:
+        try:
+            with open(
+                "generated_knowledge_customer.txt", "r", encoding="utf-8"
+            ) as file:
+                customer_knowledge = file.read()
+        except FileNotFoundError:
+            customer_knowledge = "Keine Kundeninformationen verfügbar."
+
+    try:
+        with open(
+            "backend/generated_knowledge_location.txt", "r", encoding="utf-8"
+        ) as file:
+            location_knowledge = file.read()
+    except FileNotFoundError:
+        try:
+            with open(
+                "generated_knowledge_location.txt", "r", encoding="utf-8"
+            ) as file:
+                location_knowledge = file.read()
+        except FileNotFoundError:
+            location_knowledge = "Keine Standortinformationen verfügbar."
+
+    try:
+        with open(
+            "backend/generated_knowledge_images.txt", "r", encoding="utf-8"
+        ) as file:
+            images_knowledge = file.read()
+    except FileNotFoundError:
+        try:
+            with open("generated_knowledge_images.txt", "r", encoding="utf-8") as file:
+                images_knowledge = file.read()
+        except FileNotFoundError:
+            images_knowledge = "Keine Bildinformationen verfügbar."
+
+    # Erstellung der Agenten mit dem geladenen Wissen
+    customer_agent = ChatCompletionAgent(
+        name="Customer Expert",
+        description="Expert for potential buyers of the property.",
         instructions=(
-            "You're a farmer from Southeast Asia. "
-            "Your life is deeply connected to land and family. "
-            "You value tradition and sustainability. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
+            "You are an expert on real estate customer needs and preferences. "
+            "You understand what buyers are looking for in properties and can highlight "
+            "features that would appeal to different customer demographics. "
+            "You have deep knowledge about customer behavior in real estate markets. "
+            "Use this expertise to provide insights during discussions about properties.\n\n"
+            f"Additional context about the property's customer assessment:\n{customer_knowledge}"
         ),
         service=AzureChatCompletion(),
     )
-    developer = ChatCompletionAgent(
-        name="Developer",
-        description="An urban software developer from the United States.",
+    location_agent = ChatCompletionAgent(
+        name="Location Expert",
+        description="Expert for location of property.",
         instructions=(
-            "You're a software developer from the United States. "
-            "Your life is fast-paced and technology-driven. "
-            "You value innovation, freedom, and work-life balance. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
+            "You are an expert on property locations and neighborhoods. "
+            "You have deep knowledge about different areas, including information on "
+            "school districts, transportation access, local amenities, safety records, "
+            "and future development plans that might affect property values. "
+            "Use this knowledge to provide context about property locations during discussions.\n\n"
+            f"Additional context about the property's location:\n{location_knowledge}"
         ),
         service=AzureChatCompletion(),
     )
-    teacher = ChatCompletionAgent(
-        name="Teacher",
-        description="A retired history teacher from Eastern Europe",
+    image_agent = ChatCompletionAgent(
+        name="Image expert",
+        description="Expert for images of the property.",
         instructions=(
-            "You're a retired history teacher from Eastern Europe. "
-            "You bring historical and philosophical perspectives to discussions. "
-            "You value legacy, learning, and cultural continuity. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    activist = ChatCompletionAgent(
-        name="Activist",
-        description="A young activist from South America.",
-        instructions=(
-            "You're a young activist from South America. "
-            "You focus on social justice, environmental rights, and generational change. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    spiritual_leader = ChatCompletionAgent(
-        name="SpiritualLeader",
-        description="A spiritual leader from the Middle East.",
-        instructions=(
-            "You're a spiritual leader from the Middle East. "
-            "You provide insights grounded in religion, morality, and community service. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    artist = ChatCompletionAgent(
-        name="Artist",
-        description="An artist from Africa.",
-        instructions=(
-            "You're an artist from Africa. "
-            "You view life through creative expression, storytelling, and collective memory. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    immigrant = ChatCompletionAgent(
-        name="Immigrant",
-        description="An immigrant entrepreneur from Asia living in Canada.",
-        instructions=(
-            "You're an immigrant entrepreneur from Asia living in Canada. "
-            "You balance trandition with adaption. "
-            "You focus on family success, risk, and opportunity. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
-        ),
-        service=AzureChatCompletion(),
-    )
-    doctor = ChatCompletionAgent(
-        name="Doctor",
-        description="A doctor from Scandinavia.",
-        instructions=(
-            "You're a doctor from Scandinavia. "
-            "Your perspective is shaped by public health, equity, and structured societal support. "
-            "You are in a debate. Feel free to challenge the other participants with respect."
+            "You are an expert in visual property assessment and real estate photography. "
+            "You can analyze property images to identify key features, architectural elements, "
+            "potential issues, staging effectiveness, and overall property presentation. "
+            "You understand how visual impressions impact buyer decisions and can provide "
+            "insights about property images during discussions.\n\n"
+            f"Additional context about the property's images:\n{images_knowledge}"
         ),
         service=AzureChatCompletion(),
     )
 
     return [
-        farmer,
-        developer,
-        teacher,
-        activist,
-        spiritual_leader,
-        artist,
-        immigrant,
-        doctor,
+        customer_agent,
+        location_agent,
+        image_agent,
     ]
 
 
 class ChatCompletionGroupChatManager(GroupChatManager):
-    """A simple chat completion base group chat manager.
+    """A chat completion based group chat manager for property assessment.
 
-    This chat completion service requires a model that supports structured output.
+    This group chat manager coordinates experts to generate a comprehensive property assessment
+    including property description and price estimation.
     """
 
     service: ChatCompletionClientBase
@@ -142,23 +136,34 @@ class ChatCompletionGroupChatManager(GroupChatManager):
     topic: str
 
     termination_prompt: str = (
-        "You are mediator that guides a discussion on the topic of '{{$topic}}'. "
-        "You need to determine if the discussion has reached a conclusion. "
-        "If you would like to end the discussion, please respond with True. Otherwise, respond with False."
+        "Du bist ein Moderator, der eine Fachdiskussion zum Thema '{{$topic}}' leitet. "
+        "Die Experten diskutieren eine Immobilie und tauschen ihre fachlichen Einschätzungen aus. "
+        "Bestimme, ob die Diskussion ausreichend Informationen für eine fundierte Immobilienbewertung "
+        "mit Beschreibung und Preisschätzung gesammelt hat. "
+        "Wenn genügend Informationen zu Lage, Kundenpräferenzen und visuellen Aspekten der Immobilie "
+        "diskutiert wurden, antworte mit True. Andernfalls mit False."
     )
 
     selection_prompt: str = (
-        "You are mediator that guides a discussion on the topic of '{{$topic}}'. "
-        "You need to select the next participant to speak. "
-        "Here are the names and descriptions of the participants: "
+        "Du bist ein Moderator, der eine Fachdiskussion zum Thema '{{$topic}}' leitet. "
+        "Die Experten analysieren eine Immobilie aus ihren jeweiligen Fachperspektiven. "
+        "Wähle den nächsten Teilnehmer aus, der sprechen soll, um die Bewertung zu vervollständigen. "
+        "Berücksichtige dabei, welche Informationen für eine fundierte Immobilienbewertung noch fehlen. "
+        "Hier sind die Namen und Beschreibungen der Teilnehmer: "
         "{{$participants}}\n"
-        "Please respond with only the name of the participant you would like to select."
+        "Antworte nur mit dem Namen des Teilnehmers, den du auswählen möchtest."
     )
 
     result_filter_prompt: str = (
-        "You are mediator that guides a discussion on the topic of '{{$topic}}'. "
-        "You have just concluded the discussion. "
-        "Please summarize the discussion and provide a closing statement."
+        "Du bist ein professioneller Immobilienbewerter, der eine ausführliche Immobilienbewertung "
+        "basierend auf der vorangegangenen Expertendiskussion zum Thema '{{$topic}}' erstellt. "
+        "Fasse die Diskussion in Form eines strukturierten Immobilienexposés zusammen. "
+        "Die Bewertung muss folgende Elemente enthalten:\n"
+        "1. Eine detaillierte Beschreibung der Immobilie basierend auf den visuellen Aspekten\n"
+        "2. Eine Analyse der Lage und Umgebung\n"
+        "3. Eine Einschätzung der Zielgruppe und des Marktpotentials\n"
+        "4. Eine begründete Preisschätzung in Euro\n\n"
+        "Halte die Bewertung professionell, faktenbasiert und informativ."
     )
 
     def __init__(self, topic: str, service: ChatCompletionClientBase, **kwargs) -> None:
@@ -335,7 +340,7 @@ async def main():
     group_chat_orchestration = GroupChatOrchestration(
         members=agents,
         manager=ChatCompletionGroupChatManager(
-            topic="What does a good life mean to you personally?",
+            topic="Welche Eigenschaften machen eine Immobilie besonders wertvoll?",
             service=AzureChatCompletion(),
             max_rounds=10,
         ),
@@ -354,7 +359,8 @@ async def main():
 
     # 4. Wait for the results
     value = await orchestration_result.get()
-    print(value)
+    with open("group_chat_result.txt", "w", encoding="utf-8") as file:
+        file.write(value.message.content)
 
     # 5. Stop the runtime after the invocation is complete
     await runtime.stop_when_idle()
