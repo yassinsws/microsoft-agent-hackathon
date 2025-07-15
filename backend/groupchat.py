@@ -381,7 +381,7 @@ def agent_response_callback(message: ChatMessageContent) -> None:
     print(f"**{message.name}**\n{message.content}")
 
 
-async def main():
+async def do_groupchat():
     """Main function to run the agents."""
     # 1. Create a group chat orchestration with the custom group chat manager
     agents = get_agents()
@@ -418,4 +418,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(do_groupchat())
