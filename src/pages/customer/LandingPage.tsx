@@ -1,21 +1,23 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import PropertyGrid from '../../components/property/PropertyGrid'
 import SearchBar from '../../components/search/SearchBar'
 import { mockProperties } from '../../data/mockProperties'
 
 const LandingPage: React.FC = () => {
+  const navigate = useNavigate()
+  
   // Use first 3 properties for featured showcase
   const featuredProperties = mockProperties.slice(0, 3)
 
   const handlePropertyClick = (property: any) => {
     // Navigate to property details
-    console.log('Navigate to property:', property.id)
+    navigate(`/property/${property.id}`)
   }
 
   const handleViewAllProperties = () => {
     // Navigate to search results
-    console.log('Navigate to search results')
+    navigate('/search-results')
   }
 
   const handleSearch = (query: string) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import SplitLayout from '../../components/layout/SplitLayout'
 import PropertyGrid from '../../components/property/PropertyGrid'
 import ChatInterface from '../../components/chat/ChatInterface'
@@ -19,6 +19,7 @@ interface Message {
 const SearchResults: React.FC = () => {
   const { state } = useProperty()
   const location = useLocation()
+  const navigate = useNavigate()
   const [messages, setMessages] = useState<Message[]>([])
   const [isTyping, setIsTyping] = useState(false)
   const [currentSearchQuery, setCurrentSearchQuery] = useState('')
@@ -40,7 +41,7 @@ const SearchResults: React.FC = () => {
 
   const handlePropertyClick = (property: any) => {
     // Navigate to property details
-    console.log('Navigate to property:', property.id)
+    navigate(`/property/${property.id}`)
   }
 
   const handleNewSearch = (query: string) => {

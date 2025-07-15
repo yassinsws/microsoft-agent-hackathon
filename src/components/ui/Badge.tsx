@@ -1,74 +1,47 @@
-import React, { forwardRef, HTMLAttributes } from 'react'
+import React from 'react'
 import { clsx } from 'clsx'
 
-export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  variant?: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'outline'
+interface BadgeProps {
+  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error'
   size?: 'sm' | 'md' | 'lg'
-  shape?: 'rounded' | 'pill'
-  dot?: boolean
+  children: React.ReactNode
+  className?: string
 }
 
-const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
-  (
-    {
-      className,
-      variant = 'default',
-      size = 'md',
-      shape = 'rounded',
-      dot = false,
-      children,
-      ...props
-    },
-    ref
-  ) => {
-    const baseClasses = 'inline-flex items-center font-medium'
-    
-    const variantClasses = {
-      default: 'bg-gray-100 text-gray-800',
-      primary: 'bg-primary-100 text-primary-800',
-      secondary: 'bg-secondary-100 text-secondary-800',
-      success: 'bg-success-100 text-success-800',
-      warning: 'bg-warning-100 text-warning-800',
-      error: 'bg-error-100 text-error-800',
-      outline: 'border border-gray-300 text-gray-700 bg-white',
-    }
-    
-    const sizeClasses = {
-      sm: 'px-2 py-0.5 text-xs',
-      md: 'px-2.5 py-1 text-sm',
-      lg: 'px-3 py-1.5 text-base',
-    }
-    
-    const shapeClasses = {
-      rounded: 'rounded-md',
-      pill: 'rounded-full',
-    }
-    
-    const badgeClasses = clsx(
-      baseClasses,
-      variantClasses[variant],
-      sizeClasses[size],
-      shapeClasses[shape],
-      className
-    )
-    
-    if (dot) {
-      return (
-        <span ref={ref} className={badgeClasses} {...props}>
-          <span className="w-2 h-2 rounded-full bg-current mr-1.5"></span>
-          {children}
-        </span>
-      )
-    }
-    
-    return (
-      <span ref={ref} className={badgeClasses} {...props}>
-        {children}
-      </span>
-    )
+const Badge: React.FC<BadgeProps> = ({
+  variant = 'primary',
+  size = 'md',
+  children,
+  className
+}) => {
+  const baseClasses = 'inline-flex items-center justify-center font-medium rounded-full'
+  
+  const variantClasses = {
+    primary: 'bg-primary-100 text-primary-800',
+    secondary: 'bg-gray-100 text-gray-800',
+    success: 'bg-green-100 text-green-800',
+    warning: 'bg-yellow-100 text-yellow-800',
+    error: 'bg-red-100 text-red-800'
   }
-)
-
-Badge.displayName = 'Badge'
+  
+  const sizeClasses = {
+    sm: 'px-2 py-0.5 text-xs',
+    md: 'px-2.5 py-0.5 text-sm',
+    lg: 'px-3 py-1 text-base'
+  }
+  
+  return (
+    <span
+      className={clsx(
+        baseClasses,
+        variantClasses[variant],
+        sizeClasses[size],
+        className
+      )}
+    >
+      {children}
+    </span>
+  )
+}
 
 export default Badge 
