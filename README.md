@@ -1,52 +1,199 @@
-# 🤖 Microsoft Agent Hackathon for Students
+# Contoso Claims - Multi-Agent Insurance Claims Platform
 
-This repository contains all materials necessary for the Microsoft Student Hackathon taking place at the Munich Headquarter on July 15th 2025. 🚀
+An **Agentic AI Claims Demo** powered by advanced multi-agent systems leveraging **Langgraph** and **Azure OpenAI (GPT-4.1)**, designed to streamline and enhance the end-to-end insurance claims process. This proof-of-concept showcases a cutting-edge architecture in which specialized AI agents collaboratively assess claims, delivering instant, transparent, and explainable recommendations directly to claims processors. By augmenting human decision-making, the solution significantly accelerates claim handling—reducing processing time from hours to minutes—while enhancing consistency, transparency, and customer satisfaction.
+
+## 🎯 What This Demo Showcases
+
+### Multi-Agent Architecture
+Unlike traditional single-model AI systems, Contoso Claims employs a **collaborative multi-agent approach** where specialized AI agents work together:
+
+- **🔍 Claim Assessor Agent** - Analyzes damage photos, evaluates repair costs, and validates claim consistency
+- **📋 Policy Checker Agent** - Verifies coverage terms, searches policy documents, and determines claim eligibility  
+- **⚠️ Risk Analyst Agent** - Detects fraud patterns, analyzes claimant history, and assesses risk factors
+- **📧 Communication Agent** - Generates personalized customer emails and requests missing documentation
+- **👨‍💼 Supervisor Agent** - Orchestrates the workflow and synthesizes final recommendations
+
+### Agent Behaviors & Capabilities
+
+#### Claim Assessor
+- **Multimodal Analysis**: Processes damage photos using Azure OpenAI LLMs with vision Capabilities
+- **Cost Validation**: Cross-references repair estimates with vehicle specifications
+- **Documentation Review**: Evaluates completeness of supporting evidence
+- **Damage Assessment**: Provides detailed analysis of incident consistency
+
+#### Policy Checker  
+- **Coverage Verification**: Searches policy documents using semantic similarity
+- **Multi-language Support**: Handles both English and Dutch insurance policies
+- **Exclusion Analysis**: Identifies policy limitations and coverage gaps
+- **Intelligent Search**: Uses vector embeddings for accurate policy matching
+
+#### Risk Analyst
+- **Fraud Detection**: Analyzes patterns indicative of fraudulent claims
+- **History Analysis**: Reviews claimant's previous claim patterns
+- **Risk Scoring**: Provides quantitative risk assessments
+- **Red Flag Identification**: Highlights suspicious claim elements
+
+#### Communication Agent
+- **Personalized Messaging**: Crafts contextual customer communications
+- **Missing Document Requests**: Generates specific requests for additional evidence
+- **Professional Tone**: Maintains appropriate insurance industry language
+- **Template Generation**: Creates reusable communication templates
+
+## 🏗️ Architecture
+
+### Technology Stack
+- **Multi-Agent Framework**: LangGraph with supervisor pattern
+- **AI Provider**: Azure OpenAI (GPT-4o, GPT-4.1) 
+- **Backend**: FastAPI
+- **Frontend**: Next.js 15 with React 19 and shadcn/ui
+- **Search**: FAISS vector database for policy retrieval (to be replaced with Azure AI Search in Prod Environments)
+- **Infrastructure**: Azure Container Apps
+
+### System Flow
+```
+Claim Submission → Supervisor Agent → Parallel Agent Processing → Final Assessment
+                      ↓
+    ┌─────────────────┼─────────────────┐
+    ▼                 ▼                 ▼
+Claim Assessor    Policy Checker    Risk Analyst
+    ↓                 ↓                 ▼
+Image Analysis    Document Search   Fraud Detection
+Cost Validation   Coverage Check    History Review
+    ↓                 ↓                 ▼
+    └─────────────────┼─────────────────┘
+                      ▼
+            Communication Agent (if needed)
+                      ▼
+              Human-Readable Summary
+```
+
+## 🚀 Key Features
+
+- **Real-time Agent Collaboration**: Watch agents work together in live workflows
+- **Explainable AI**: Full transparency into agent reasoning and decision paths
+- **Document Intelligence**: PDF processing and semantic search across policies
+- **Multimodal Processing**: Image analysis for damage assessment
+- **Interactive Demos**: Individual agent testing and complete workflow simulation
+- **Production Ready**: Deployed on Azure with enterprise security
+
+## 🛠️ Development Setup
+
+### Prerequisites
+- Python 3.12+
+- Node.js 18+
+- [uv](https://github.com/astral-sh/uv) for Python dependency management
+- Azure OpenAI account (optional - falls back to mock responses)
 
 
-## 📅 Agenda
+### Environment Configuration
+Create a `.env` file in the backend directory:
+```env
+AZURE_OPENAI_API_KEY=your_api_key_here
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_DEPLOYMENT_NAME=llm-deployment-name(ex. gpt-4.1)
+AZURE_OPENAI_EMBEDDING_MODEL=embedding-model-deployment-name
+AZURE_OPENAI_API_VERSION=2025-04-01-preview
+```
 
-| **Time** | **Session** | **Material / Slides** |
-|:---------|:-----------|:---------------------|
-| 09:00 - 09:10 | **Welcome**|  |
-| 09:10 - 09:30 | **Introduction to Agentic Systems**<br>Concept of single and multi Agent Systems including Business Use Cases | [Open Slides](Slides/Agentic_AI.pdf) |
-| 09:30 - 09:50 | **How to build Agentic Systems**<br>Guide on how to develope Agentic Systems with the Microsoft Stack | [Open Slides](Slides/How_to_build_agents.pdf) |
-| 09:50 - 10:00 | **Hackathon Challange and Guidelines**<br> Presenation of Hackathon Challang and Evaluation Criteria | [Open Slides](Slides/Challange_Details.pdf) |
-| 10:00 - 13:00 | **Hacking Session 1** | |
-| 10:00 - 13:00 | <span style="font-weight:bold; color:#555;">Lunch Break</span> |  |
-| 14:00 - 16:00 | **Hacking Session 2** |  |
-| 16:00 - 17:15 | **Team Pitch and Winner Announcements** |  |
-| 17:15 - 17:45 | **Careers at Microsoft** |  |
-| 17:45 - 18:00 | **Closing remarks & Netowrking** |  |
+### Backend Setup
+```bash
+cd backend
+uv run fastapi dev
+```
+The API will be available at http://localhost:8000
+
+### Frontend Setup
+```bash
+cd frontend
+npm install --legacy-peer-deps
+npm run dev
+```
+The frontend will be available at http://localhost:3000
 
 
-## 🏆 Evaluation Criteria
+## 🌐 Azure Deployment
 
-![alt text](Media/hackathon_guidelines.png)
+### Prerequisites
+- [Azure Developer CLI (azd)](https://docs.microsoft.com/en-us/azure/developer/azure-developer-cli/)
+- Azure subscription with appropriate permissions
 
-## 🚀 Getting Started
+### Deploy to Azure Container Apps
+```bash
+# Login to Azure
+azd auth login
 
-### 1.  Setting up your Subscription and Azure AI Foundry ☁️
+# Initialize and deploy
+azd up
+```
 
-We provide every team with 50 $ in Azure Credits to setup an AI Foundry Instance. We will come to every team individualy to set this up. For further credits you can leverage also the free credits given to students. [Request free student azure credits here](https://azure.microsoft.com/en-us/free/students#:~:text=Start%20free%20with%20%24100%20credit%20to%20use%20in,get%20%24100%20credit%20and%20free%20services%E2%80%94just%20like%20before.?msockid=1dbbfc39330560290369e9af326e61ff)
+This will:
+1. Create Azure Container Apps environment
+2. Set up container registry with managed identity
+3. Deploy both frontend and backend containers
+4. Configure networking and CORS policies
+5. Output the deployed application URLs
 
-### 2. Continue with the starter Code for Azure AI Foundry SDK [AI Foundry SDK](./AI-Foundry-SDK/) 
+### Infrastructure
+The deployment creates:
+- **Container Apps Environment** with consumption-based scaling
+- **Azure Container Registry** for image storage
+- **Managed Identity** for secure registry access
+- **Log Analytics Workspace** for monitoring
+- **HTTPS endpoints** with automatic SSL certificates
 
-This is a short guide to explain how Agents are created in Azure AI Foundry. It contains an exercise you can follow to have a working local setup of the Azure AI Agents SDK
+## 🎮 Demo Scenarios
 
-### 3. (Optional) ontinue with the starter Code for the Semantic Kernel SDK [Semantic Kernel](./Semantic-Kernel-SDK/)
+### Individual Agent Testing
+- `/agents/claim-assessor` to test damage photo analysis
+- `/agents/policy-checker` to verify coverage scenarios
+- `/agents/risk-analyst` for fraud detection demos
+- `/agents/communication-agent` for email generation
 
-Only necessary if you decide to use Semantic Kernel as an orchestration Framework
+### Complete Workflow
+- Go to `/demo` for end-to-end claim processing
+- Upload damage photos and watch multimodal analysis
+- See agents collaborate in real-time
+- Review final assessment with full reasoning
 
-### 4. Checkout the official Microsoft documentation and additional resources 📚
+### Sample Claims
+The system includes realistic test scenarios:
+- Standard auto collision claim
+- High-value vehicle damage
+- Dutch language insurance claim
 
-- **Azure AI Foundry Agent Service** - [Microsoft Documentation](https://learn.microsoft.com/en-us/azure/ai-foundry/agents/overview)
+## 📚 Project Structure
 
-- **Semantic Kernel Agent Framework** - [Microsoft Documentation](https://learn.microsoft.com/en-us/semantic-kernel/frameworks/agent/?pivots=programming-language-python)
+```
+simple-insurance-multi-agent/
+├── backend/                    # FastAPI application
+│   ├── app/
+│   │   ├── api/v1/            # REST API endpoints
+│   │   ├── workflow/          # Agent definitions and tools
+│   │   │   ├── agents/        # Individual agent implementations
+│   │   │   ├── tools.py       # Shared agent tools
+│   │   │   └── supervisor.py  # Workflow orchestration
+│   │   ├── core/              # Configuration and logging
+│   │   └── services/          # Business logic layer
+├── frontend/                   # Next.js application
+│   ├── app/                   # App router pages
+│   ├── components/            # Reusable UI components
+│   └── lib/                   # API clients and utilities
+├── infra/                     # Azure Bicep templates
+└── azure.yaml                # Azure deployment configuration
+```
 
-- **Azure AI Templates** - [Browse Templates](https://azure.github.io/ai-app-templates/)
+## 🔍 Explainable AI Features
 
-- **LangGraph** - [Official Documentation](https://www.langchain.com/langgraph)
+- **Decision Trees**: Visual representation of agent reasoning
+- **Source Attribution**: Links decisions to specific policy documents  
+- **Confidence Scoring**: Quantitative assessment of decision certainty
+- **Audit Trails**: Complete log of agent interactions for compliance
+- **Human Intervention Points**: Clear override capabilities for human reviewers
 
-## 🎥 Demo
+## 📄 License
 
-You can access the repository of the shown live demo of the multi-agent system here: https://aka.ms/demo-multi-agent
+MIT License - see LICENSE file for details.
+
+---
+
+**Built with modern AI agent frameworks to demonstrate the future of insurance claim processing.**
