@@ -46,3 +46,7 @@ Only necessary if you decide to use Semantic Kernel as an orchestration Framewor
 - **Azure AI Templates** - [Browse Templates](https://azure.github.io/ai-app-templates/)
 
 - **LangGraph** - [Official Documentation](https://www.langchain.com/langgraph)
+
+## 🎥 Demo
+
+You can access the repository of the shown live demo of the multi-agent system here: https://aka.ms/demo-multi-agent
