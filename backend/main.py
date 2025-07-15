@@ -439,11 +439,15 @@ async def create_item_legacy(input: Input):
     await do_groupchat()
 
     # Datei lesen
+    data = {}
     with open("group_chat_result.txt", "r", encoding="utf-8") as f:
-        content = f.read()
+        for line in f:
+            if not line.strip():  # skip blank lines
+                continue
+            key, value = map(str.strip, line.split(":", 1))
+            data[key] = value
 
-    """Legacy endpoint for backward compatibility."""
-    return content
+    return data
 
 
 if __name__ == "__main__":
