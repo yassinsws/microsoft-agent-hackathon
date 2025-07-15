@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 from backend.generate_knowledge import generate_knowledge
 from backend.groupchat import do_groupchat
+from backend.models import Input  # Import der Input-Klasse aus models.py
 
 load_dotenv()
 # FastAPI-Instanz erstellen
@@ -425,11 +426,6 @@ def list_all_properties():
         ],
         "total": len(property_uploads),
     }
-
-
-class Input(BaseModel):
-    prompt: str
-    images: List[str]  # Base64 encoded images or URLs
 
 
 # Legacy endpoint for backward compatibility

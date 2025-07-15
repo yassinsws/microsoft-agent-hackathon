@@ -3,13 +3,12 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 import asyncio
-import json
 
 from dotenv import load_dotenv
 from semantic_kernel.agents import ChatCompletionAgent
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 
-from backend.main import Input
+from backend.models import Input  # Import aus models.py statt aus main.py
 
 agentLocal = ChatCompletionAgent(
     service=AzureChatCompletion(deployment_name="gpt-4o"),
@@ -30,6 +29,21 @@ agentImages = ChatCompletionAgent(
     name="Assistant",
     instructions="You are a real estate image assessment specialist. Analyze the provided property images and describe the property features, condition, style, layout, and any notable aspects visible in the images.",
 )
+
+
+# async def get_bing_agent():
+#     async with (
+#         DefaultAzureCredential() as creds,
+#         AzureAIAgent.create_client(credential=creds) as client,
+#     ):
+#         agent_definition = await client.agents.get_agent(
+#             agent_id="asst_9qwhCCnDdavP3BaHxpm71njh"
+#         )
+#         agent = AzureAIAgent(client=client, definition=agent_definition)
+#         return agent
+#
+#
+# bing_agent = asyncio.run(get_bing_agent())
 
 
 async def generate_knowledge(input: Input):
