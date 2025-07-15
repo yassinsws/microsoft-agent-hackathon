@@ -429,7 +429,7 @@ def list_all_properties():
 
 
 # Legacy endpoint for backward compatibility
-@app.post("/prompt/", response_model=dict, status_code=201)
+@app.post("/prompt/", status_code=201)
 async def create_item_legacy(input: Input):
     await generate_knowledge(input)
     await do_groupchat()
@@ -437,13 +437,9 @@ async def create_item_legacy(input: Input):
     # Datei lesen
     data = {}
     with open("group_chat_result.txt", "r", encoding="utf-8") as f:
-        for line in f:
-            if not line.strip():  # skip blank lines
-                continue
-            key, value = map(str.strip, line.split(":", 1))
-            data[key] = value
+        content = f.read()
 
-    return data
+    return content
 
 
 if __name__ == "__main__":

@@ -406,7 +406,7 @@ async def do_groupchat():
     )
 
     # 4. Wait for the results
-    value: ChatMessageContent = await orchestration_result.get()
+    value = await orchestration_result.get()
 
     # Datei nur mit dem eigentlichen JSON-Inhalt speichern (ohne MessageResult-Wrapper)
     json_content = value.content
